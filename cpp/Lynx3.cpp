@@ -68,11 +68,9 @@ const int edgeDistance[107] = {0,0,0,1,0,0,1,2,1,0,0,1,2,3,2,1,0,0,1,2,3,4,3,2,1
 // See Lynx3-patterns.cpp
 extern const std::vector<unsigned long long> patterns[107];	// defined in Lynx3-patterns.cpp
 
-// This opening book is computed by evaluating the strength of a game state by playing a number of games in self-play
-// Each position has been sampled using 256 games with a time limit of 5 seconds per player.
-// The best move in a given state is picked using the minimax algorithm, where the first player tried to maximize his win chance, and the opponent tries to minimize the win chance of the first player
-std::map<std::vector<int>, int> getOpeningBook();  // defined in Lynx3-opening.cpp
-const auto openingBook = getOpeningBook();
+// Get a move from the opening book based on the moves played so far
+// Returns either the move from the opening book, or 0 if the opening book does not contain the given move sequence
+extern int getOpeningMove(const std::vector<int> &history);  // defined in Lynx3-opening.cpp
 
 static long long nanoTime()
 {
@@ -695,16 +693,6 @@ public:
 		}
 
 		return bestMove;
-	}
-
-private:
-
-	// Get a move from the opening book based on the moves played so far
-	// Returns either the move from the opening book, or 0 if the opening book does not contain the given move sequence
-	int getOpeningMove(const std::vector<int> &moves)
-	{
-		auto it = openingBook.find(moves);
-		return it != openingBook.end() ? it->second : 0;
 	}
 };
 

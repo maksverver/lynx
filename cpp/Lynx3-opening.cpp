@@ -1,6 +1,10 @@
 #include <map>
 #include <vector>
 
+// This opening book is computed by evaluating the strength of a game state by playing a number of games in self-play
+// Each position has been sampled using 256 games with a time limit of 5 seconds per player.
+// The best move in a given state is picked using the minimax algorithm, where the first player tried to maximize his win chance, and the opponent tries to minimize the win chance of the first player
+
 const struct BookEntry { int history[3], move; } openings[] = {
 	{ {}, 11 },
 	{ {1}, 44 },
@@ -2046,15 +2050,23 @@ const struct BookEntry { int history[3], move; } openings[] = {
 	{ {106}, 30 },
 	{ {}, 0 } };
 
-std::map<std::vector<int>, int> getOpeningBook()
+int getOpeningMove(const std::vector<int> &history)
 {
-	std::map<std::vector<int>, int> book;
-	for (const struct BookEntry *e = openings; e->move != 0; ++e) {
+	// Opening book contains up to three moves:
+	if (history.size() > 3) return 0;
+
+	for (int i = 0; openings[i].move; ++i)
+	{
 		int n = 0;
-		while (n < 3 && e->history[n] != 0) ++n;
-		book[std::vector<int>(&e->history[0], &e->history[n])] = e->move;
+		while (n < (int)history.size() && openings[i].history[n] == history[n]) ++n;
+		if (n == (int)history.size() && (n == 3 || openings[i].history[n] == 0)) {
+			// Matching opening entry found!
+			return openings[i].move;
+		}
 	}
-	return book;
+
+	// No matching entry found.
+	return 0;
 }
 
 // Human readable version of the opening book with symmetry reduction, where each line has the following structure:
