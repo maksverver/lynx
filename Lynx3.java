@@ -411,7 +411,20 @@ public class Lynx3 {
 	private static Object[] o(Object... objects) {
 		return objects;
 	}
-	
+
+	private static void printOpeningBook(List<Integer> moves, Object[] node) {
+		System.out.println(moves.toString() + ": " + node[0]);
+		if (node.length > 1) {
+			for (int i = 1; i <= POSITIONS; ++i) {
+				if (node[i] != null) {
+					moves.add(i);
+					printOpeningBook(moves, (Object[])node[i]);
+					moves.remove(moves.size() - 1);
+				}
+			}
+		}
+	}
+
 	// Entry point
 	private static Lynx3 main = new Lynx3();
 	public static void main(String[] args) throws IOException {
