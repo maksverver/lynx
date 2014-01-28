@@ -489,8 +489,9 @@ public:
 		// Call expand() as long long as we have time
 		int iterations = 0;
 		while(state.end > 0) {
-			expand(rng);
-			++iterations;
+			for (int n = 0; n < 100; ++n)
+				expand(rng);
+			iterations += 100;
 			if (nanoTime() - start >= time * 1000000000) break;
 		}
 		std::cerr << "Expanded " << iterations << " nodes." << std::endl;
