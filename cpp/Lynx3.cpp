@@ -493,7 +493,7 @@ public:
 			++iterations;
 			if (nanoTime() - start >= time * 1000000000) break;
 		}
-		std::cerr << "Expanded for " << iterations << " itererations." << std::endl;
+		std::cerr << "Expanded " << iterations << " nodes." << std::endl;
 
 		// Select the move with the highest number of samples
 		int bestScore = -1;

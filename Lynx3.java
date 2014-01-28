@@ -928,7 +928,7 @@ public class Lynx3 {
 				// Call expand() as long as we have time
 				int iters = 0;
 				do ++iters; while(expand() != null && System.nanoTime() - start < time * 1000000000);
-				System.err.println("Ran for " + iters + " iterations");
+				System.err.println("Expanded " + iters + " nodes");
 
 				// Select the move with the highest number of samples
 				int bestScore = -1;
