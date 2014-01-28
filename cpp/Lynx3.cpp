@@ -445,19 +445,19 @@ private:
 
 	// A mapping of moves to child nodes
 	// FIXME: turn this into a hash-map?
-	std::map<int, Tree*> children;
+	Tree* children[POSITIONS + 1];
 
 public:
 	// Constructs a tree node given a state and whether it is my move
 	Tree(const GameState &state, bool myMove)
-		: state(state), myMove(myMove), statistics() { }
+		: state(state), myMove(myMove), statistics(), children() { }
 
 	// Constructs a tree node with a default state
-	Tree(bool myMove) : state(), myMove(myMove), statistics() { }
+	Tree(bool myMove) : state(), myMove(myMove), statistics(), children() { }
 
 	// Constructs a child node from a parent node and a given move
 	Tree(const Tree &parent, int m)
-		: state(parent.state), myMove(!parent.myMove), statistics()
+		: state(parent.state), myMove(!parent.myMove), statistics(), children()
 	{
 		if(parent.myMove) state.updateMyMove(m);
 		else state.updateOpMove(m);
@@ -466,19 +466,18 @@ public:
 	// Destructs a tree node and frees all child nodes
 	~Tree()
 	{
-		for (auto elem : children) delete elem.second;
+		for (auto child : children) delete child;
 	}
 
 	// Gets the child node of this node for a given move
 	// NOTE: this removes the subtree from its parent, to avoid double-freeing!
 	Tree *treeAfterMove(int move)
 	{
-		auto it = children.find(move);
-		if (it == children.end()) {
+		Tree *child = children[move];
+		if (child == nullptr) {
 			return new Tree(*this, move);
 		}
-		Tree *child = it->second;
-		children.erase(it);
+		children[move] = nullptr;
 		return child;
 	}
 
@@ -502,9 +501,8 @@ public:
 		int bestMove = state.remainingMoves[0];
 		for(int i = 0; i < state.end; i++) {
 			int move = state.remainingMoves[i];
-			auto it = children.find(move);
-			if(it != children.end()) {
-				const Tree *child = it->second;
+			const Tree *child = children[move];
+			if(child != nullptr) {
 				int score = child->statistics.samples;
 				if(score > bestScore) {
 					bestScore = score;
@@ -537,9 +535,8 @@ public:
 				
 				// If we have actual samples of this node available, we do a linear interpolation of the
 				// AMAF score with the actual samples based on the ALPHA parameter (alpha-AMAF)
-				auto it = children.find(move);
-				if(it != children.end()) {
-					const Tree *child = it->second;
+				const Tree *child = children[move];
+				if(child != nullptr) {
 					score = score * ALPHA + (((double) child->statistics.wins) / child->statistics.samples) * (1.0 - ALPHA);
 				}
 				
@@ -564,9 +561,8 @@ public:
 				
 				// If we have actual samples of this node available, we do a linear interpolation of the
 				// AMAF score with the actual samples based on the ALPHA parameter (alpha-AMAF)
-				auto it = children.find(move);
-				if(it != children.end()) {
-					const Tree *child = it->second;
+				const Tree *child = children[move];
+				if(child != nullptr) {
 					score = score * ALPHA + (((double) (child->statistics.samples - child->statistics.wins)) / child->statistics.samples) * (1.0 - ALPHA);
 				}
 				
