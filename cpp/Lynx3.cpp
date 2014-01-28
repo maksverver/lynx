@@ -71,7 +71,8 @@ extern const std::vector<unsigned long long> patterns[107];	// defined in Lynx3-
 // This opening book is computed by evaluating the strength of a game state by playing a number of games in self-play
 // Each position has been sampled using 256 games with a time limit of 5 seconds per player.
 // The best move in a given state is picked using the minimax algorithm, where the first player tried to maximize his win chance, and the opponent tries to minimize the win chance of the first player
-extern const std::map<std::vector<int>, int> openingBook;	// defined in Lynx3-opening.cpp
+std::map<std::vector<int>, int> getOpeningBook();  // defined in Lynx3-opening.cpp
+const auto openingBook = getOpeningBook();
 
 static long long nanoTime()
 {

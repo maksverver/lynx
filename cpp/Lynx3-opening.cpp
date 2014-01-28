@@ -1,7 +1,7 @@
 #include <map>
 #include <vector>
 
-extern const std::map<std::vector<int>, int> openingBook = {
+const struct BookEntry { int history[3], move; } openings[] = {
 	{ {}, 11 },
 	{ {1}, 44 },
 	{ {2}, 31 },
@@ -2043,7 +2043,19 @@ extern const std::map<std::vector<int>, int> openingBook = {
 	{ {103}, 67 },
 	{ {104}, 55 },
 	{ {105}, 42 },
-	{ {106}, 30 } };
+	{ {106}, 30 },
+	{ {}, 0 } };
+
+std::map<std::vector<int>, int> getOpeningBook()
+{
+	std::map<std::vector<int>, int> book;
+	for (const struct BookEntry *e = openings; e->move != 0; ++e) {
+		int n = 0;
+		while (n < 3 && e->history[n] != 0) ++n;
+		book[std::vector<int>(&e->history[0], &e->history[n])] = e->move;
+	}
+	return book;
+}
 
 // Human readable version of the opening book with symmetry reduction, where each line has the following structure:
 //  <sequence of moves that lead to the current state> <move to play> <win rate for the first player in self play>
