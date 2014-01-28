@@ -294,9 +294,9 @@ public:
 
 				// Add the move to current player
 				if (move < 64) {
-					cML |= 1l << move;
+					cML |= 1ULL << move;
 				} else {
-					cMR |= 1l << (move - 64);
+					cMR |= 1ULL << (move - 64);
 				}
 				
 				lastMove = move;
@@ -367,9 +367,9 @@ public:
 						if(isSet(l, r, n)) {	// Is this node played by us?
 							// Mark the neighbour as processed
 							if (n < 64) {
-								l &= ~(1l << n);
+								l &= ~(1ULL << n);
 							} else {
-								r &= ~(1l << (n - 64));
+								r &= ~(1ULL << (n - 64));
 							}
 							
 							// Add the neighour to the top of the stack
