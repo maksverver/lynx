@@ -309,12 +309,12 @@ public:
 				oML = cML_;
 				oMR = cMR_;
 			}
-			
+
 			// Did we win?
 			// 1: we won
 			// 0: we lost
 			int win = myMoveAtEnd == (winner(cML, cMR) ? 1 : 0);
-			
+
 			// Update the AMAF playout result
 			result.wins += win;
 			for(int j = 1; j < POSITIONS + 1; j++) {
@@ -327,7 +327,7 @@ public:
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -520,7 +520,7 @@ public:
 
 		// If there are no moves remaining in this node, we are done
 		if(state.end == 0) return result;
-		
+
 		int selected = 0;
 		
 		// Select the best node for the current player
