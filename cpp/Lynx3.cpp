@@ -480,17 +480,21 @@ public:
 	}
 
 	// Computes the best move given some amount of computation time
-	int findBestMove(double time, Rng &rng)
+	int findBestMove(double time, int fixedIterations, Rng &rng)
 	{
 		long long start = nanoTime();
 		
-		// Call expand() as long long as we have time
+		// Call expand() as long long as we have time, or if fixedIterations > 0,
+		// just run the required number of iterations.
 		int iterations = 0;
 		while(state.end > 0) {
-			for (int n = 0; n < 100; ++n)
-				expand(rng);
-			iterations += 100;
-			if (nanoTime() - start >= time * 1000000000) break;
+			expand(rng);
+			++iterations;
+			if (fixedIterations > 0) {
+				if (iterations >= fixedIterations) break;
+			} else if (iterations%64 == 0) {
+				if ((nanoTime() - start >= time * 1000000000)) break;
+			}
 		}
 		std::cerr << "Expanded " << iterations << " nodes." << std::endl;
 
@@ -626,7 +630,7 @@ public:
 		delete tree;
 	}
 
-	int play(int lastMove, double remainingTime)
+	int play(int lastMove, double remainingTime, int fixedIterations = 0)
 	{
 		if(lastMove > 0) {
 			playedMoves.push_back(lastMove);
@@ -668,7 +672,7 @@ public:
 			
 			if(bestMove == 0) {
 				// If the opening book has no entry, compute the best move
-				bestMove = tree->findBestMove(std::max(remainingTime / TIME_DIVIDER, MINIMUM_TIME), rng);
+				bestMove = tree->findBestMove(std::max(remainingTime / TIME_DIVIDER, MINIMUM_TIME), fixedIterations, rng);
 				if(bestMove == 0) bestMove = tree->state.remainingMoves[0];
 			}
 		}
@@ -699,14 +703,14 @@ public:
 // Plays the oppenent's given move, and returns the bot's response.
 // If the move is 0, the bot will start.  (This is a function separate from
 // main() so it can be called interactively in the  web frontend.)
-int play(int move)
+extern "C" int play(int move, int fixedIterations = 0)
 {
 	static TreeBotFinal bot;
 	static double remainingTime = TOTAL_TIME;
 
 	long long start = nanoTime();
 
-	int response = bot.play(move, remainingTime);
+	int response = bot.play(move, remainingTime, fixedIterations);
 
 	long long end = nanoTime();
 	double time = (double)(end - start)/1000000000;
