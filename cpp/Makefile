@@ -16,6 +16,6 @@ clean:
 	rm -f $(LYNX3_OBJECTS)
 
 distclean: clean
-	rm -f $(LYNX3_OBJECTS)
+	rm -f Lynx3
 
 .PHONY: all clean distclean
