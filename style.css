@@ -1,0 +1,39 @@
+body {
+	font: 11pt sans-serif;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	background: white;
+}
+
+div#mainHolder {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em;
+	display: inline-block;
+}
+
+div#moveHolder {
+	width: 9em;
+	height: 420px;
+	overflow: auto;
+	display: inline-block;
+}
+
+table#moves {
+	display:inline-block;
+	vertical-align: top;
+}
+
+table#moves th {
+	min-width: 3em;
+	text-align: center;
+}
+table#moves td {
+	text-align: center;
+}
+
+input#difficulty {
+	width: 4em;
+	text-align: right;
+}

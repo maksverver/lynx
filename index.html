@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Poly-Y</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Poly-Y</h1>
+<div id="mainHolder">
+ <div style="width:9em;display:inline-block"></div>
+
+ <canvas id="board" width="500" height="420"></canvas>
+
+ <div id="moveHolder">
+
+  <div id="options">
+    <h4>Options</h4>
+    <p>Difficulty<br><input id="difficulty" type="text" value="1000"></p>
+    <input id="startAI" type="button" value="AI starts" onclick="aiStarts()">
+  </div>
+
+  <table id="moves" style="display:none">
+   <tr><th style="background-color:blue;color:white">PL</th>
+       <th style="background-color:red;color:white">AI</th> </tr>
+  </table>
+ </div>
+
+ <p style="font-size:10pt"><a href="https://web.archive.org/web/20140130104826/http://www.codecup.nl/rules_poly-y.php" target="_blank">Rules of the Game</a>.</p>
+ <p style="font-size:10pt">AI: <a href="https://github.com/lwevers/lynx/blob/master/Lynx3.java">Lynx3</a> by Lesley Wevers &amp; Steven te Brinke.</p>
+
+</div>
+
+<script src="fields.js"></script>
+<script src="game.js"></script>
+<script src="Lynx3.js"></script>
+<script>
+getAiMove = Module.cwrap('play', 'number', ['number','number'])
+</script>
+</body>
+</html>
